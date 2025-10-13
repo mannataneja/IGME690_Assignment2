@@ -25,7 +25,7 @@ public class MapGenerator : MonoBehaviour
     public int caveSmoothIterations = 3;
 
     public GameObject entrancePrefab;
-    public GameObject[] roomPrefabs; // pool for random rooms
+    public GameObject[] roomPrefabs; //add 1 prefab per room
 
     int[,] map;
     int[,] room;

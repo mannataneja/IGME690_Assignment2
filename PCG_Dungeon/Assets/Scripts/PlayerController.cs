@@ -4,7 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float mouseSensitivity = 2f;
-    public Transform cam; // assign your camera in inspector
+    public Transform camera; 
 
     float pitch = 0f;
 
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
         pitch -= mouseY;
         pitch = Mathf.Clamp(pitch, -89f, 89f);
-        cam.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+        camera.localRotation = Quaternion.Euler(pitch, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
 
         float h = Input.GetAxisRaw("Horizontal");
