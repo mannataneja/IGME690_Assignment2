@@ -355,29 +355,38 @@ public class MapGenerator : MonoBehaviour
         int dy = Mathf.Abs(y1 - y0);
         int sx = (x0 < x1) ? 1 : -1;
         int sy = (y0 < y1) ? 1 : -1;
-        int err = dx - dy;
+        int error = dx - dy;
 
-        int tunnelRadius = UnityEngine.Random.Range(2, 4);
+        int radius = UnityEngine.Random.Range(2, 4);
 
         while (true)
         {
-            DrawCircle(x0, y0, tunnelRadius);
+            DrawCircle(x0, y0, radius);
+            int e2 = 2 * error;
 
-            if (x0 == x1 && y0 == y1)
+            if (e2 > -dy)
             {
-                break;
+                if(x0 == x1)
+                {
+                    break;
+                }
+                error -= dy;
+                x0 += sx;
             }
-            int e2 = 2 * err;
-            if (e2 > -dy) 
-            { 
-                err -= dy; x0 += sx; 
-            }
-            if (e2 < dx) 
-            { 
-                err += dx; y0 += sy; 
+
+            if (e2 < dx)
+            {
+                if(y0 == y1)
+                {
+                    break;
+                }
+                error += dx;
+                y0 += sy;
             }
         }
     }
+
+
 
     void DrawCircle(int cx, int cy, int r)
     {
