@@ -482,19 +482,15 @@ public class MeshGenerator : MonoBehaviour
                 }
                 Vector3 a = vertices[outline[i]];
                 Vector3 b = vertices[outline[i + 1]];
-                Vector3 dir = (b - a).normalized;
+                Vector3 direction = (b - a).normalized;
                 float length = Vector3.Distance(a, b);
 
-                for (float dist = 0; dist <= length; dist += spacing)
-                {
-                    Vector3 pos = a + dir * dist;
-                    Vector3 inward = Vector3.Cross(dir, Vector3.up);
-                    Quaternion rot = Quaternion.LookRotation(-inward, Vector3.up);
+                Vector3 inward = Vector3.Cross(direction, Vector3.up);
+                Quaternion rotation = Quaternion.LookRotation(-inward, Vector3.up);
 
-                    GameObject sconce = Instantiate(sconcePrefab, transform.TransformPoint(pos), rot);
-                    sconce.transform.parent = gameObject.transform;
-                    sconces.Add(sconce);
-                }
+                GameObject sconce = Instantiate(sconcePrefab, transform.TransformPoint(a), rotation);
+                sconce.transform.parent = gameObject.transform;
+                sconces.Add(sconce);
             }
         }
     }

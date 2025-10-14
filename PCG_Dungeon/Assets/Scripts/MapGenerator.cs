@@ -14,7 +14,7 @@ public class MapGenerator : MonoBehaviour
     public string seed;
     public bool useRandomSeed = true;
     [Range(0, 100)]
-    public int randomFillPercent = 45;
+    public float randomFillPercent = 45;
     public Slider fillPercentSlider;
 
     public int minRoomSize = 8;
@@ -282,23 +282,24 @@ public class MapGenerator : MonoBehaviour
 
         return wallCount;
     }
-    void GenerateRectangularRooms(int minSize, int maxSize, int attempts)
+    void GenerateRectangularRooms(int minRoomSize, int maxRoomSize, int generationAttempts)
     {
-        System.Random rand = new System.Random(seed.GetHashCode());
+        System.Random random = new System.Random(seed.GetHashCode());
 
-        for (int i = 0; i < attempts; i++)
+        for (int attempt = 0; attempt < generationAttempts; attempt++)
         {
-            int w = rand.Next(minSize, maxSize);
-            int h = rand.Next(minSize, maxSize);
-            int x = rand.Next(1, mapWidth - w - 1);
-            int y = rand.Next(1, mapHeight - h - 1);
+            int roomWidth = random.Next(minRoomSize, maxRoomSize);
+            int roomHeight = random.Next(minRoomSize, maxRoomSize);
+            int startX = random.Next(1, mapWidth - roomWidth - 1);
+            int startY = random.Next(1, mapHeight - roomHeight - 1);
 
+  
             bool overlap = false;
-            for (int xx = x - 1; xx < x + w + 1; xx++)
+            for (int checkX = startX - 1; checkX < startX + roomWidth + 1; checkX++)
             {
-                for (int yy = y - 1; yy < y + h + 1; yy++)
+                for (int checkY = startY - 1; checkY < startY + roomHeight + 1; checkY++)
                 {
-                    if (xx > 0 && yy > 0 && xx < mapWidth && yy < mapHeight && room[xx, yy] == 1)
+                    if (checkX > 0 && checkY > 0 && checkX < mapWidth && checkY < mapHeight && room[checkX, checkY] == 1)
                     {
                         overlap = true;
                         break;
@@ -313,20 +314,23 @@ public class MapGenerator : MonoBehaviour
             if (overlap)
             {
                 continue;
-            }
 
-            for (int xx = x; xx < x + w; xx++)
+            }
+            for (int tileX = startX; tileX < startX + roomWidth; tileX++)
             {
-                for (int yy = y; yy < y + h; yy++)
+                for (int tileY = startY; tileY < startY + roomHeight; tileY++)
                 {
-                    map[xx, yy] = 0;
-                    room[xx, yy] = 1;
+                    map[tileX, tileY] = 0;
+                    room[tileX, tileY] = 1;
                 }
             }
-            Vector3 center = new Vector3(-mapWidth / 2 + x + w / 2f, 0, -mapHeight / 2 + y + h / 2f);
-            generatedRooms.Add(new GeneratedRoom(x, y, w, h, center));
+
+            Vector3 roomCenter = new Vector3(-mapWidth / 2 + startX + roomWidth / 2f, 0, -mapHeight / 2 + startY + roomHeight / 2f);
+
+            generatedRooms.Add(new GeneratedRoom(startX, startY, roomWidth, roomHeight, roomCenter));
         }
     }
+
 
     void ConnectRoomsWithTunnels()
     {
@@ -359,7 +363,7 @@ public class MapGenerator : MonoBehaviour
 
         int radius = UnityEngine.Random.Range(2, 4);
 
-        while (true)
+        while (true) //Bresenham's line algorithm
         {
             DrawCircle(x0, y0, radius);
             int e2 = 2 * error;
@@ -560,6 +564,7 @@ public class MapGenerator : MonoBehaviour
             return;
         }
 
+        randomFillPercent = fillPercentSlider.value;
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
         for (int x = 0; x < mapWidth; x++)
         {

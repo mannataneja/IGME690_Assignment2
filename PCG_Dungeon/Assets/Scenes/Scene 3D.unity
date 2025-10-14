@@ -369,7 +369,7 @@ MonoBehaviour:
   mapHeight: 100
   seed: 0
   useRandomSeed: 1
-  randomFillPercent: 75
+  randomFillPercent: 60
   fillPercentSlider: {fileID: 1880166900}
   minRoomSize: 10
   maxRoomSize: 20
