@@ -7,6 +7,7 @@ using System.Collections;
 [RequireComponent(typeof(MeshGenerator))]
 public class MapGenerator : MonoBehaviour
 {
+    public GameObject player;
 
     public int mapWidth = 100;
     public int mapHeight = 100;
@@ -425,6 +426,7 @@ public class MapGenerator : MonoBehaviour
             if (i == 0)
             {
                 prefabToSpawn = entrancePrefab;
+                player.transform.position = spawnPos;
             }
             else
             {
